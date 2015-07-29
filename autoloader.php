@@ -1,16 +1,6 @@
 <?php
 
-// require the composer autoloader now
-require_once(__DIR__.'/../../vendor/autoload.php');
-
-// load the configuration first
-require_once(__DIR__.'/../../config/config.php');
-
-//load helper functions
-require_once(__DIR__.'/utils/helpers.php');
-
-
-class Autoloader {
+class FrameworkAutoloader {
 
   private $_path_cache = array();
 
@@ -56,7 +46,7 @@ class Autoloader {
   }
 }
 
-$autoload = new Autoloader();
+$autoload = new FrameworkAutoloader();
 
 
 
