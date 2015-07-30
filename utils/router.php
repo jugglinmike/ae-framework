@@ -11,7 +11,7 @@ class Router Implements RouterInterface {
    *
    * @var array
    */
-  protected static $_route_mappings = array();
+  protected $_route_mappings = array();
 
   protected $_routes = array();
 
@@ -65,7 +65,7 @@ class Router Implements RouterInterface {
   }
 
   protected function _load_routes() {
-    foreach (self::$_route_mappings as $file) {
+    foreach ($this->_route_mappings as $file) {
       $path = API_BASE_PATH . '/routes' . $file . '.php';
 
       // load the endpoint's path so that it can take care of everything
