@@ -7,10 +7,10 @@ class BaseJsonDeleteRoute extends BaseJsonRoute {
     $class_name = $this->get_model_class();
 
     try {
-      // retrieve the existing model (if it exists) and then immediately delete
-      // it
+      // retrieve the existing model (if it exists) and then
+      // flag it as inactive
       $model = new $class_name($identifier);
-      $model->delete();
+      $model->soft_delete();
       http_response_code(204);
     } catch (Exception $err) {
       $this->_handle_deletion_error($err);

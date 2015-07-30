@@ -48,6 +48,13 @@ class BaseModel {
   protected $_linked_tables = array();
 
   /**
+   * OPTIONAL: Tables that need to be cleaned up if
+   * the model is marked inactive
+   * @var array
+   */
+  protected $_inactive_cleanup = array();
+
+  /**
    * Ensures that anything that used this `BaseModel` is setup properly. Also,
    * handles fetching an existing database record (by its identifier) or
    * creating a new set of data (to be modified at a later time).
@@ -108,7 +115,27 @@ class BaseModel {
       throw new Exception('The specified identifier results in no database records. ' . $tableQuery);
     }
 
-    $this->_data = $records[0];
+    $this->_data = $this->_scrub_for_booleans($records[0]);
+  }
+
+  /**
+   * Takes all the data from the database and turns tinyINT (0, 1) into True False booleans
+   * removes the inactive key from the DB results
+   */
+  protected function _scrub_for_booleans($data) {
+    foreach ($data as $field => $value) {
+      $schema = $this->get_db_schema();
+      $field_info = $schema[$field];
+      if ($field_info['type'] == 'bool') {
+        $data[$field] = ($value == 1) ? true : false;
+      }
+    }
+
+    if (array_key_exists('inactive', $data)) {
+      unset($data['inactive']);
+    }
+
+    return $data;
   }
 
   /**
@@ -124,7 +151,15 @@ class BaseModel {
       $info = $schema[$attr];
       $default = array_key_exists('default', $info) ? $info['default'] : null;
       if (array_key_exists('defaultFunction', $info)) {
-        $this->_data[$attr] = call_user_func($info['defaultFunction']);
+        if (is_callable($info['defaultFunction'])) {
+          if (is_array($info['defaultFunction'])) {
+            $this->_data[$attr] = call_user_func_array($info['defaultFunction']);
+          } else {
+            $this->_data[$attr] = call_user_func($info['defaultFunction']);
+          }
+        } else {
+          throw new Exception('defaultFunction was provided but is not callable');
+        }
       } else {
         $this->_data[$attr] = $default;
       }
@@ -273,6 +308,30 @@ class BaseModel {
     }
   }
 
+
+  /**
+   * Soft Deletes the object
+   *
+   * This sets the 'inactive' column to true and will clean up any dependents by setting them to inactive true
+   */
+  public function soft_delete() {
+    $this->__set('inactive',1);
+    $this->_update();
+    if (count($this->_inactive_cleanup)) {
+      foreach ($this->_inactive_cleanup as $key => $value) {
+        $search = array(
+                    $value['identifier'] => $this->__get('id')
+                  );
+        $cleanCollection = new $key();
+        $cleanCollection->fetch($search);
+
+        $cleanCollection->each(function($model){
+          $model->soft_delete();
+        });
+      }
+    }
+  }
+
   /**
    * Updates the existing database record with our internal `_data`.
    *
@@ -381,6 +440,15 @@ class BaseModel {
     return $this->_data;
   }
 
+  /**
+   * Retrieves the internal data for scrubbed for booleans
+   * (note: Booleans needs to be converted to ints in order for mysqli bind_param to work)
+   *
+   * @return array|mixed
+   */
+  public function get_user_friendly_data() {
+    return $this->_scrub_for_booleans($this->get_data());
+  }
 
   /**
    * Breaks down includes to retrieve nested data.
@@ -519,7 +587,8 @@ class BaseModel {
         return is_int($value);
         break;
       case 'bool':
-        return is_bool($value);
+        // bind param in mysqli needs booleans to be integers
+        return is_int($value);
         break;
       case 'float':
         return is_float($value);
@@ -561,7 +630,8 @@ class BaseModel {
         $value = floatval($value);
         break;
       case 'bool':
-        $value = ($value === '1' || strtolower($value) === 'true') ? true : false;
+        // bind param in mysqli needs booleans to be integers
+        $value = ($value === '1' || strtolower($value) === 'true') ? 1 : 0;
         break;
       case 'string':
         $value = (string) $value;

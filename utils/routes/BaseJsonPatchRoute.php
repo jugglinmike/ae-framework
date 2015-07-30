@@ -26,7 +26,7 @@ class BaseJsonPatchRoute extends BaseJsonRoute {
 
     // save the model and render the new data for the user
     $model->save();
-    $res = JsonResHandler::render($model->get_data(), 200);
+    $res = JsonResHandler::render($model->get_user_friendly_data(), 200);
   }
 
   protected function _sanitize_operation_values($base_url = '', $operations = array()) {

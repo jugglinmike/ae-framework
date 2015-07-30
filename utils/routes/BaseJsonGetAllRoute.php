@@ -74,7 +74,10 @@ class BaseJsonGetAllRoute extends BaseJsonRoute {
 
   public function render($search_params = array()) {
     $collection_class = $this->get_collection_class();
-    $collection = new $collection_class($search_params);
+    $collection = new $collection_class();
+    // fetch collection
+    $collection->fetch($search_params);
+
     $include = $this->get_include();
 
     $data = array();

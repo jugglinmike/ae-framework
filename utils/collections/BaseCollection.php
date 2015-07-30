@@ -39,17 +39,9 @@ class BaseCollection {
    * @param int|null $limit Used to specify a limit for the number of models to
    *   fetch.
    */
-  public function __construct($filters = array(), $limit = null) {
-    // if the limit is specified, make sure it is an integer
-    if (!is_null($limit) && !is_integer($limit)) {
-      trigger_error('Please ensure that the specified limit is an integer', E_USER_ERROR);
-    }
-
+  public function __construct() {
     // pre-flight
     $this->_validate_collection_dependencies();
-
-    // finally, fetch and cache the models using the specified filters
-    $this->_fetch_and_cache_db_records($filters, $limit);
   }
 
   /**
@@ -63,6 +55,23 @@ class BaseCollection {
     } else if (!($this->_model_object instanceof BaseModel)) {
       trigger_error('The `_model_object` must be a child of `BaseModel`', E_USER_ERROR);
     }
+  }
+
+  /**
+  *  Public function to fetch and cash db records
+  **/
+  public function fetch($filters = array(), $limit = null) {
+    // if the limit is specified, make sure it is an integer
+    if (!is_null($limit) && !is_integer($limit)) {
+      trigger_error('Please ensure that the specified limit is an integer', E_USER_ERROR);
+    }
+
+    // default to filtering out inactive
+    if (!array_key_exists('inactive', $filters)){
+      $filters['inactive'] = 0;
+    }
+
+    $this->_fetch_and_cache_db_records($filters, $limit);
   }
 
   /**
