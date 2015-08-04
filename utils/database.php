@@ -421,8 +421,16 @@ class Database implements DatabaseInterface {
    * @param mixed $value Data to be bound to the MySQLi statement later on.
    */
   public static function add_variable_binding($value) {
+    $type = self::_determine_variable_type($value);
+
+    // account for boolean variables that need to be converted to tinyints
+    if ($type === 'b') {
+      $type = 'i';
+      $value = $value ? 1 : 0;
+    }
+
     self::$_variable_binds[] = array(
-      'type' => self::_determine_variable_type($value),
+      'type' => $type,
       'value' => $value
     );
   }
