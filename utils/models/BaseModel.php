@@ -588,7 +588,7 @@ class BaseModel {
         break;
       case 'bool':
         // bind param in mysqli needs booleans to be integers
-        return is_int($value);
+        return is_bool($value);
         break;
       case 'float':
         return is_float($value);
