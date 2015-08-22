@@ -61,4 +61,29 @@ class BaseJsonRoute extends BaseRoute {
     return $identifier;
   }
 
+  public function dashKeys($array, $arrayHolder = array()) {
+    $dashArray = !empty($arrayHolder) ? $arrayHolder : array();
+    foreach ($array as $key => $val) {
+      $newKey = str_replace('_', '-', $key);
+      if (!is_array($val)) {
+        $dashArray[$newKey] = $val;
+      } else {
+        $dashArray[$newKey] = $this->dashKeys($val);
+      }
+    }
+    return $dashArray;
+  }
+
+  public function underscoreKeys($array, $arrayHolder = array()) {
+    $underscoreArray = !empty($arrayHolder) ? $arrayHolder : array();
+    foreach ($array as $key => $val) {
+      $newKey = str_replace('-', '_', $key);
+      if (!is_array($val)) {
+        $underscoreArray[$newKey] = $val;
+      } else {
+        $underscoreArray[$newKey] = $this->underscoreKeys($val);
+      }
+    }
+    return $underscoreArray;
+  }
 }

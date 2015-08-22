@@ -11,7 +11,8 @@ class BaseJsonGetOneRoute extends BaseJsonRoute {
 
     try {
       $model = new $class_name($search);
-      $res = JsonResHandler::render($model->get_linked_data($include), 200);
+      $data = $model->get_linked_data($include);
+      $res = JsonResHandler::render($this->dashKeys($data), 200);
     } catch (Exception $err) {
       $this->_handle_get_one_error($err);
     }

@@ -84,7 +84,7 @@ class BaseJsonGetAllRoute extends BaseJsonRoute {
 
     // add all of the data from each model in the collection
     $collection->each(function($model) use (&$data, $include) {
-      $data[] = $model->get_linked_data($include);
+      $data[] = $this->dashKeys($model->get_linked_data($include));
     });
 
     $res = JsonResHandler::render($data, 200);
