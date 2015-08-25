@@ -26,7 +26,7 @@ class BaseJsonPatchRoute extends BaseJsonRoute {
 
     // save the model and render the new data for the user
     $model->save();
-    $res = JsonResHandler::render($model->get_user_friendly_data(), 200);
+    $res = JsonResHandler::render($this->dashKeys($model->get_user_friendly_data()), 200);
   }
 
   protected function _sanitize_operation_values($base_url = '', $operations = array()) {
@@ -94,7 +94,8 @@ class BaseJsonPatchRoute extends BaseJsonRoute {
 
   protected function _parse_field_from_operation_path($base_url = '', $path = '') {
     $base_url .= '/';
-    return str_replace($base_url, '', $path);
+    $field = str_replace($base_url, '', $path);
+    return str_replace('-', '_', $field);
   }
 
   protected function _get_model($identifier = null) {

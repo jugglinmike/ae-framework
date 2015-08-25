@@ -38,6 +38,8 @@ class BaseJsonPostRoute extends BaseJsonRoute {
   }
 
   public function create_new_model($data = array()) {
+    $data = $this->underscoreKeys($data);
+
     // ensure that all of the fields actually exist
     $this->_validate_data($data);
 
@@ -56,8 +58,7 @@ class BaseJsonPostRoute extends BaseJsonRoute {
 
     // save this new object and render the result
     $model->save();
-    $res = JsonResHandler::render($model->get_user_friendly_data(), 200);
+    $res = JsonResHandler::render($this->dashKeys($model->get_user_friendly_data()), 200);
   }
 
 }
-

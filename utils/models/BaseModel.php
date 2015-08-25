@@ -489,11 +489,11 @@ class BaseModel {
     $parentIncludes = $this->get_sub_includes($includes);
 
     foreach ($this->get_linked_tables() as $key => $value) {
-      $tableName = str_replace('-id', '', $key);
+      $tableName = str_replace('_id', '', $key);
       if (array_key_exists($tableName, $parentIncludes)) {
         $linkModelData = new $value[0]($allData[$key]);
         unset($allData[$key]);
-        $jsonKey = str_replace('-id', '', $key);
+        $jsonKey = str_replace('_id', '', $key);
         $allData[$jsonKey] = $linkModelData->get_linked_data($parentIncludes[$tableName]);
       }
     }
