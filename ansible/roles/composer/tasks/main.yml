@@ -1,0 +1,27 @@
+---
+- name: install curl
+  apt: pkg=curl update_cache=yes
+  tags: composer
+
+- name: install composer
+  shell: curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin creates=/usr/local/bin/composer
+  tags: composer
+
+- name: rename composer.phar to composer
+  shell: mv /usr/local/bin/composer.phar /usr/local/bin/composer creates=/usr/local/bin/composer
+  tags: composer
+
+- name: make composer executable
+  shell: chmod a+x /usr/local/bin/composer
+  tags: composer
+
+- name: install composer dependencies
+  composer: command=install working_dir={{root}}
+  tags: composer
+
+- name: Alias PHPUnit binary
+  file:
+    src: "{{ root }}/vendor/bin/phpunit"
+    dest: /usr/local/bin/phpunit
+    state: link
+  tags: composer

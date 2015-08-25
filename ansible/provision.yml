@@ -5,3 +5,4 @@
   roles:
     - mysql
     - php5-fpm
+    - composer
