@@ -27,7 +27,9 @@ Class JsonResHandler {
    * See: http://jsonapi.org/format/ for more information.
    */
   protected static function _set_required_json_headers() {
-    header('Content-Type: application/vnd.api+json');
+    if (!headers_sent()) {
+      header('Content-Type: application/vnd.api+json');
+    }
   }
 
 
@@ -47,7 +49,6 @@ Class JsonResHandler {
     // simply echo the JSON out
     http_response_code($responseCode);
     echo json_encode($data);
-    exit;
   }
 
   /**
