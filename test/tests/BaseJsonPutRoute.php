@@ -1,9 +1,5 @@
 <?php
-
-define('DB_HOST', '127.0.0.1');
-define('DB_USERNAME', 'root');
-define('DB_PASSWORD', '');
-define('DB_DATABASE', 'api');
+require_once('./AEFrameworkTestCase.php');
 
 class TestModel extends BaseModel {
   protected $_json_type = 'test json type';
@@ -21,15 +17,12 @@ class JsonPutRoute extends BaseJsonPutRoute {
   }
 }
 
-class BaseJsonPutRouteTest extends PHPUnit_Extensions_Database_TestCase
+class BaseJsonPutRouteTest extends AEFrameworkTestCase
 {
-  static private $pdo = null;
-  private $conn = null;
-
   protected $_table_name = 'test_table';
   protected $_fixture = [
-    'prim' => 33,
-    'test_attr' => 123
+    [ 'prim' => 13, 'test_attr' => 123 ],
+    [ 'prim' => 33, 'test_attr' => 456 ]
   ];
   protected $_schema = <<<SQL
     DROP TABLE IF EXISTS `test_table`;
@@ -43,31 +36,7 @@ SQL;
   {
     $this->router = new Router();
     $this->r = new JsonPutRoute($this->router);
-  }
-
-  public function getConnection()
-  {
-    if ($this->conn === null) {
-      if (self::$pdo === null) {
-        self::$pdo = new PDO(
-          'mysql:host=' . DB_HOST . ';dbname=' . DB_DATABASE, DB_USERNAME,
-           DB_PASSWORD);
-        self::$pdo->exec($this->_schema);
-       }
-       $this->conn = $this->createDefaultDBConnection(self::$pdo, DB_DATABASE);
-    }
-    return $this->conn;
-  }
-
-  public function getDataSet()
-  {
-    $dataset = array(
-      $this->_table_name => array(
-        $this->_fixture
-      )
-    );
-
-    return $this->createArrayDataSet($dataset);
+    parent::setUp();
   }
 
   public function wrap($fn)
@@ -85,6 +54,15 @@ SQL;
     $data = $this->wrap(function() use ($r) {
       $r->update_model(['test_attr' => 23]);
     });
+
+    $queryTable = $this->tableFromQuery('SELECT * FROM test_table');
+
+    $expectedTable = $this->tableFromArray([
+        ['prim' => 13, 'test_attr' => 123],
+        ['prim' => 33, 'test_attr' => 456],
+        ['prim' => 0, 'test_attr' => 23]
+      ]);
+    $this->assertTablesEqual($expectedTable, $queryTable);
 
     $this->assertEquals($data->{'test-attr'}, 23);
   }
