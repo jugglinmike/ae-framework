@@ -12,10 +12,4 @@ install:
   - sudo pip install ansible
 before_script:
   - ansible-playbook -i ansible/inventory/travis ansible/provision.yml
-script:
-  - mysql --version
-  - mysql -u root --password=12345 -e "select host, user, password from mysql.user;"
-  - mysql -u root -e "select host, user, password from mysql.user;"
-  - mysql -u api --password=bocoup -e "select * from api;"
-  - cd test
-  - /usr/local/bin/phpunit --debug
+script: cd test && ../vendor/bin/phpunit --debug
