@@ -10,6 +10,8 @@ install:
 before_script:
   - ansible-playbook -i ansible/inventory/travis ansible/provision.yml
 script:
-  - mysql -u root --password=12345  -e "select host, user, password from mysql.user;"
+  - mysql --version
+  - mysql -u root --password=12345 -e "select host, user, password from mysql.user;"
+  - mysql -u api --password=bocoup -e "select * from api;"
   - cd test
   - phpunit --debug
