@@ -5,8 +5,6 @@
   roles:
     - mysql
     - php5-fpm
-    - nginx
-    - git
     - composer
     - phpcs
     - phpunit

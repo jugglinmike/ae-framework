@@ -1,8 +1,0 @@
----
-- name: Install ec2-automate-backup
-  copy: src=ec2-automate-backup-awscli.sh dest=/usr/local/bin/ec2-automate-backup mode=0750
-  tags: aws-backups
-
-- name: Register Cron to run ec2-automate-backup
-  cron: name="ec2-automated-backup" job="/usr/local/bin/ec2-automate-backup -v \"vol-b503d5fb\"" hour=0 minute=0
-  tags: aws-backups

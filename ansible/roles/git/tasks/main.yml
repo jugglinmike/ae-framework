@@ -1,6 +1,0 @@
----
-# git clone plugins
-
-  # install git
-  - name: Install git
-    apt: pkg=git
