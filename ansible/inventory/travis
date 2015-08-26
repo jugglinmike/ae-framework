@@ -5,6 +5,5 @@ api.dev
 
 [appserver:vars]
 root={{ lookup('env', 'TRAVIS_BUILD_DIR') }}
-api_root={{ lookup('env', 'TRAVIS_BUILD_DIR') }}/src
 serverName=api.dev
 mysqlRootPass=12345
