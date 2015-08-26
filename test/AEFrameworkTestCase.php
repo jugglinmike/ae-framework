@@ -16,17 +16,19 @@ abstract class AEFrameworkTestCase extends PHPUnit_Extensions_Database_TestCase
   static private $pdo = null;
   private $conn = null;
 
+  public static function setupBeforeClass()
+  {
+    $tmppdo = new PDO('mysql:host=' . DB_HOST, DB_USERNAME, DB_PASSWORD);
+    $tmppdo->exec('CREATE DATABASE IF NOT EXISTS ' + DB_DATABASE);
+    self::$pdo = new PDO(
+      'mysql:host=' . DB_HOST . ';dbname=' . DB_DATABASE, DB_USERNAME,
+       DB_PASSWORD);
+  }
+
   protected function setUp()
   {
     self::$pdo->exec($this->_schema);
     parent::setUp();
-  }
-
-  public static function setupBeforeClass()
-  {
-    self::$pdo = new PDO(
-      'mysql:host=' . DB_HOST . ';dbname=' . DB_DATABASE, DB_USERNAME,
-       DB_PASSWORD);
   }
 
   public static function tearDownAfterClass()
