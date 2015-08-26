@@ -1,13 +1,14 @@
 ---
-- name: Remove existing mysql installation
-  apt: pkg=mysql-server state=absent
-  when: lookup('env', 'TRAVIS') != ''
+#- name: Remove existing mysql installation
+#  apt: pkg=mysql-server state=absent
+#  when: lookup('env', 'TRAVIS') != ''
 
 - name: Install mysql and its dependencies
   apt: pkg={{ item }} install_recommends=no state=present update_cache=yes
   with_items:
     - mysql-server
     - python-mysqldb
+  when: lookup('env', 'TRAVIS') == ''
   tags: mysql
 
 - name: Copy configuration file
