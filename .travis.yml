@@ -12,6 +12,7 @@ before_script:
 script:
   - mysql --version
   - mysql -u root --password=12345 -e "select host, user, password from mysql.user;"
+  - mysql -u root -e "select host, user, password from mysql.user;"
   - mysql -u api --password=bocoup -e "select * from api;"
   - cd test
   - phpunit --debug
