@@ -3,12 +3,13 @@
 #  apt: pkg=mysql-server state=absent
 #  when: lookup('env', 'TRAVIS') != ''
 
-- name: Install mysql and its dependencies
-  apt: pkg={{ item }} install_recommends=no state=present update_cache=yes
-  with_items:
-    - mysql-server
-    - python-mysqldb
+- name: Install mysql
+  apt: pkg=mysql-server install_recommends=no state=present update_cache=yes
   when: lookup('env', 'TRAVIS') == ''
+  tags: mysql
+
+- name: Install Python mysqldb module
+  apt: pkg=python-mysqldb install_recommends=no state=present update_cache=yes
   tags: mysql
 
 - name: Copy configuration file
