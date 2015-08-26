@@ -5,6 +5,7 @@ php: 5.6
 before_install:
   - sudo apt-get update -qq
   - sudo apt-get install -qq python-apt python-pycurl
+  - sudo apt-get remove --purge mysql-server
 install:
   - sudo pip install ansible
 before_script:

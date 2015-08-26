@@ -5,7 +5,7 @@
 
 - name: Install mysql
   apt: pkg=mysql-server install_recommends=no state=present update_cache=yes
-  when: lookup('env', 'TRAVIS') == ''
+  #when: lookup('env', 'TRAVIS') == ''
   tags: mysql
 
 - name: Install Python mysqldb module
