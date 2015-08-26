@@ -1,0 +1,24 @@
+---
+- name: Install nginx
+  apt: pkg={{ item }} install_recommends=no state=present update_cache=yes
+  with_items:
+    - nginx
+  notify: restart nginx
+  tags: nginx
+
+- name: Creating /mnt/logs
+  file: path=/mnt/logs state=directory
+  tags: nginx
+
+- name: Configure nginx.conf
+  template: src=nginx.conf dest=/etc/nginx/nginx.conf
+  tags: nginx
+
+- name: Copy nginx-common.conf
+  template: src=nginx-common.conf dest=/etc/nginx/nginx-common.conf
+  tags: nginx
+
+- name: Setup the api.dev configuration for nginx
+  template: src=api.conf dest=/etc/nginx/conf.d/api.conf
+  notify: restart nginx
+  tags: nginx

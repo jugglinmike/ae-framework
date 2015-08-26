@@ -1,0 +1,10 @@
+vagrant ansible_ssh_host=192.168.13.38 ansible_ssh_user=vagrant
+[appserver]
+vagrant
+
+[appserver:vars]
+root=/mnt/ae-framework
+api_root=/mnt/src
+serverName=api.dev
+migrationType=development
+mysqlRootPass=12345

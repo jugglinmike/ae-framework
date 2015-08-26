@@ -1,0 +1,12 @@
+---
+- name: Download PHPUnit
+  shell: wget https://phar.phpunit.de/phpunit.phar
+  tags: phpunit
+
+- name: Make PHPUnit executable
+  shell: chmod +x phpunit.phar
+  tags: phpunit
+
+- name: Install PHPUnit
+  shell: sudo mv phpunit.phar /usr/local/bin/phpunit
+  tags: phpunit

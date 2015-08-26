@@ -1,0 +1,9 @@
+---
+- hosts: all
+  gather_facts: false
+  sudo: yes
+  roles:
+    - php5-fpm
+    - composer
+    - phpcs
+    - phpunit

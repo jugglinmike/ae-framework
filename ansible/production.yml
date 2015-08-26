@@ -1,0 +1,15 @@
+---
+- hosts: all
+  gather_facts: false
+  sudo: yes
+  roles:
+    - mysql
+    - php5-fpm
+    - nginx
+    - copy
+    - git
+    - composer
+    - phpcs
+    - phpunit
+    - aws-cli
+    - aws-backups

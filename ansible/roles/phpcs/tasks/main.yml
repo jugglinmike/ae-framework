@@ -1,0 +1,8 @@
+---
+- name: Create symlink for phpcs
+  file: src={{ root }}/vendor/bin/phpcs dest=/usr/local/bin/phpcs state=link
+  tags: phpcs
+
+- name: Create symlink for phpcbf
+  file: src={{ root }}/vendor/bin/phpcbf dest=/usr/local/bin/phpcbf state=link
+  tags: phpcs

@@ -1,0 +1,12 @@
+---
+- hosts: all
+  gather_facts: false
+  sudo: yes
+  roles:
+    - mysql
+    - php5-fpm
+    - nginx
+    - git
+    - composer
+    - phpcs
+    - phpunit

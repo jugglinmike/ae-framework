@@ -1,0 +1,6 @@
+{
+  "require": {
+    "phpunit/dbunit": ">=1.2",
+    "squizlabs/php_codesniffer": "2.*"
+  }
+}
