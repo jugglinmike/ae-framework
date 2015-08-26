@@ -7,5 +7,4 @@ api.dev
 root={{ lookup('env', 'TRAVIS_BUILD_DIR') }}
 api_root={{ lookup('env', 'TRAVIS_BUILD_DIR') }}/src
 serverName=api.dev
-migrationType=testing
 mysqlRootPass=12345

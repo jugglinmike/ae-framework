@@ -9,3 +9,4 @@ mysql_users:
     priv: "api.*:ALL"
   - name: root
     pass: "{{ mysqlRootPass }}"
+    priv: "*.*:ALL"

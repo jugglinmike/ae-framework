@@ -6,5 +6,4 @@ vagrant
 root=/mnt/ae-framework
 api_root=/mnt/src
 serverName=api.dev
-migrationType=development
 mysqlRootPass=12345
