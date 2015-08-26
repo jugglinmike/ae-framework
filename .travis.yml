@@ -18,4 +18,4 @@ script:
   - mysql -u root -e "select host, user, password from mysql.user;"
   - mysql -u api --password=bocoup -e "select * from api;"
   - cd test
-  - phpunit --debug
+  - /usr/local/bin/phpunit --debug
