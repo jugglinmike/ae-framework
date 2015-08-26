@@ -18,7 +18,3 @@
 - name: install composer dependancies
   composer: command=install working_dir={{root}}
   tags: composer
-
-- name: restart nginx
-  service: name=nginx state=restarted
-  tags: composer
