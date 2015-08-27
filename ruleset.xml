@@ -25,7 +25,14 @@
     </properties>
   </rule>
   <rule ref="Generic.Files.EndFileNewline"/>
-  <rule ref="Generic.Files.OneClassPerFile"/>
+  <rule ref="Generic.Files.OneClassPerFile">
+    <!--
+      Because the classes defined by the framework are abstract, concrete
+      implementations must be created for testing purposes. Allow for these
+      instances to be declared alongside the "test case" classes.
+    -->
+    <exclude-pattern>./test/tests/*</exclude-pattern>
+  </rule>
   <rule ref="Generic.Files.OneInterfacePerFile"/>
   <rule ref="Generic.Formatting.DisallowMultipleStatements"/>
   <rule ref="Generic.Formatting.SpaceAfterCast"/>
