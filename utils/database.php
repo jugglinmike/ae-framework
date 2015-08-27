@@ -426,7 +426,7 @@ class Database implements DatabaseInterface {
     // account for boolean variables that need to be converted to tinyints
     if ($type === 'b') {
       $type = 'i';
-      $value = $value ? 1 : 0;
+      $value = ($value) ? 1 : 0;
     }
 
     self::$_variable_binds[] = array(

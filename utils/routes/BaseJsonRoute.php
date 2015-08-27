@@ -71,6 +71,7 @@ class BaseJsonRoute extends BaseRoute {
         $dashArray[$newKey] = $this->dashKeys($val);
       }
     }
+
     return $dashArray;
   }
 
@@ -84,6 +85,7 @@ class BaseJsonRoute extends BaseRoute {
         $underscoreArray[$newKey] = $this->underscoreKeys($val);
       }
     }
+
     return $underscoreArray;
   }
 }

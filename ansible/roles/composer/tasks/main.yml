@@ -19,9 +19,13 @@
   composer: command=install working_dir={{root}}
   tags: composer
 
-- name: Alias PHPUnit binary
+- name: Alias binaries
   file:
-    src: "{{ root }}/vendor/bin/phpunit"
-    dest: /usr/local/bin/phpunit
+    src: "{{ root }}/vendor/bin/{{ item }}"
+    dest: /usr/local/bin/{{ item }}
     state: link
+  with_items:
+    - phpunit
+    - phpcs
+    - phpcbf
   tags: composer
