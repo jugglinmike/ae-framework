@@ -1,4 +1,4 @@
-# ae-framework
+# ae-framework [![Build Status](https://travis-ci.org/wfmu/ae-framework.svg?branch=master)](https://travis-ci.org/wfmu/ae-framework)
 
 ## Getting Started
 
