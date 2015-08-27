@@ -1,0 +1,26 @@
+---
+- name: Add the updated PHP PPA
+  shell: add-apt-repository -y ppa:ondrej/php5-5.6
+  tags: php5-fpm
+
+- name: Update the local package cache
+  apt: update_cache=yes
+  tags: php5-fpm
+
+- name: Install php5-fpm and dependencies
+  apt: pkg={{ item }} install_recommends=no state=present update_cache=yes force=yes
+  with_items:
+    - php5-fpm
+    - php5-cli
+    - php5-common
+    - php5-dev
+    - php5-imagick
+    - php5-mcrypt
+    - php5-mysql
+    - php5-imap
+    - php5-curl
+    - php-pear
+    - php5-gd
+    - python-software-properties
+  notify: restart php5-fpm
+  tags: php5-fpm

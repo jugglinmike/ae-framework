@@ -1,0 +1,36 @@
+---
+- name: Install mysql and its dependencies
+  apt: pkg={{ item }} state=present update_cache=yes
+  with_items:
+    - mysql-server
+    - python-mysqldb
+  tags: mysql
+
+- name: Copy configuration file
+  template: src=my.conf dest=/etc/mysql/my.cnf
+  notify: restart mysql
+  tags: mysql
+
+- name: Create the database users
+  mysql_user:
+    name: "{{ item.name }}"
+    password: "{{ item.pass|default('foobar') }}"
+    priv: "{{ item.priv }}"
+    state: present
+    host: "{{ item.host|default('localhost') }}"
+    check_implicit_admin: yes
+    login_user: root
+    login_password: "{{ mysqlRootPass }}"
+  with_items: mysql_users
+  when: mysql_users|lower() != 'none'
+  tags: mysql
+
+- name: Create the databases
+  mysql_db:
+    name: "{{ item.name }}"
+    state: present
+    login_user: root
+    login_password: "{{ mysqlRootPass }}"
+  with_items: mysql_databases
+  when: mysql_databases|lower() != 'none'
+  tags: mysql

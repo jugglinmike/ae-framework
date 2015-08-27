@@ -1,0 +1,12 @@
+---
+mysql_databases:
+  - name: api
+    replicate: no
+
+mysql_users:
+  - name: api
+    pass: bocoup
+    priv: "api.*:ALL"
+  - name: root
+    pass: "{{ mysqlRootPass }}"
+    priv: "*.*:ALL"

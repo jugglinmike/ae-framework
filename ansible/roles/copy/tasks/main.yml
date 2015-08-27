@@ -1,0 +1,13 @@
+---
+- name: Copy over src
+  copy:
+    src='../utils'
+    dest={{root}}
+  tags: copy
+
+- name: Copy over composer file
+  copy:
+    src='../composer.json'
+    dest={{root}}
+  tags: copy
+
