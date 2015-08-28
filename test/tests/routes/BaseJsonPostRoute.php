@@ -133,7 +133,7 @@ SQL;
     ));
     $this->assertTablesEqual($expectedTable, $queryTable);
 
-    $this->assertNotNull($result['exception']);
+    $this->assertNull($result['exception']);
     $this->assertNotNull($result['decoded']);
     $this->assertCount(1, $result['decoded']);
     $this->assertEquals('INVALID_FIELD', $result['decoded'][0]->code);

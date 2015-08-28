@@ -52,13 +52,43 @@ class BaseJsonRoute extends BaseRoute {
           'detail' => 'An invalid model identifier was specified; "' .
             $field . '" does not exist within the specified database schema'
         );
-        $res = JsonResHandler::render(array($error), 400);
+        JsonResHandler::render(array($error), 400);
       }
 
       $identifier[$field] = $model->sanitize_db_field_value($field, $value);
     }
 
     return $identifier;
+  }
+
+  /**
+   * Verify that the route's model supports the provided data.
+   */
+  protected function validate_data($data) {
+    // ensure we're dealing with an array
+    if (!is_array($data)) {
+      return array(
+        'code' => 'NO_POSTED_DATA',
+        'description' => 'There was a problem receiving the posted data'
+      );
+    }
+
+    // now, iterate through each field - validating that it is a valid
+    // attribute
+    $model = $this->get_model_object();
+    $primary_key = $model->get_db_primary_key();
+    foreach ($data as $field => $value) {
+      // make sure the field exists
+      if ($field !== $primary_key && !$model->is_valid_attribute($field)) {
+        return array(
+          'code' => 'INVALID_FIELD',
+          'detail' => 'This endpoint does not support the "' .
+            $field . '" field'
+        );
+      }
+    }
+
+    return true;
   }
 
   public function dashKeys($array, $arrayHolder = array()) {

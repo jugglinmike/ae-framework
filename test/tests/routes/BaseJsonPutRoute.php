@@ -144,7 +144,7 @@ SQL;
     ));
     $this->assertTablesEqual($expectedTable, $queryTable);
 
-    $this->assertNotNull($result['exception']);
+    $this->assertNull($result['exception']);
     $this->assertNotNull($result['decoded']);
     $this->assertCount(1, $result['decoded']);
     $this->assertEquals('INVALID_FIELD', $result['decoded'][0]->code);
@@ -185,7 +185,7 @@ SQL;
 
     $queryTable = $this->tableFromQuery('SELECT * FROM test_table');
 
-    $this->assertNotNull($result['exception']);
+    $this->assertNull($result['exception']);
     $expectedTable = $this->tableFromArray(array(
       array( 'prim' => 1, 'test_attr1' => 4, 'test_attr2' => 6, 'inactive' => null ),
       array( 'prim' => 2, 'test_attr1' => 5, 'test_attr2' => 6, 'inactive' => null ),
