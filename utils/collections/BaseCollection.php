@@ -99,7 +99,8 @@ class BaseCollection {
     }
 
     // finally, fetch the results
-    $fields = array('id');
+    $primary_key = $this->_model_object->get_db_primary_key();
+    $fields = array($primary_key);
     if (is_integer($limit)) {
       $results = Database::get($this->_model_object->get_db_table(), $limit, $fields);
     } else {
@@ -115,7 +116,7 @@ class BaseCollection {
     }
 
     // first, pluck the id's from results
-    $ids = array_pluck('id', $results);
+    $ids = array_pluck($primary_key, $results);
 
     // finally, instantiate new models for each result that was fetched
     $class_name = $this->get_model_class();
