@@ -63,13 +63,16 @@ class BaseJsonRoute extends BaseRoute {
 
   /**
    * Verify that the route's model supports the provided data.
+   *
+   * @return mixed `true` if the data is valid; an array with string attributes
+   *               `code` and `detail` properties otherwise
    */
   protected function validate_data($data) {
     // ensure we're dealing with an array
     if (!is_array($data)) {
       return array(
         'code' => 'NO_POSTED_DATA',
-        'description' => 'There was a problem receiving the posted data'
+        'detail' => 'There was a problem receiving the posted data'
       );
     }
 
