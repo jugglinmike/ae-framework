@@ -91,10 +91,10 @@ class BaseRoute {
 
   protected function _try_fetching_model_dependencies($dependencies, $modelName, $identifier) {
     try {
-      $search = array('id' => $identifier);
-
-      // don't do any searching until we need to
+    	      // don't do any searching until we need to
       $dummyModel = new $modelName();
+      $primaryKey = $dummyModel->get_db_primary_key();
+      $search = array($primaryKey => $identifier);
       $modelAttributes = $dummyModel->get_attributes();
 
       // iterate through all of the dependencies, adding them to the search

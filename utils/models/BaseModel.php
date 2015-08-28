@@ -319,9 +319,10 @@ class BaseModel {
     $this->_update();
     if (count($this->_inactive_cleanup)) {
       foreach ($this->_inactive_cleanup as $key => $value) {
+        $primaryKey = $this->get_db_primary_key();
         $search = array(
-                    $value['identifier'] => $this->__get('id')
-                  );
+                  $value['identifier'] => $this->__get($primaryKey)
+                );
         $cleanCollection = new $key();
         $cleanCollection->fetch($search);
 
