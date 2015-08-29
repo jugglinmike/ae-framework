@@ -82,8 +82,13 @@ class Database implements DatabaseInterface {
 
     //throw errors, but not too many
     mysqli_report(MYSQLI_REPORT_ERROR | MYSQLI_REPORT_STRICT);
+    if (defined('TESTMODE')) {
+      $database = TEST_DB_DATABASE;
+    } else {
+      $database = DB_DATABASE;
+    }
 
-    self::$_mysql = new mysqli(DB_HOST, DB_USERNAME, DB_PASSWORD, DB_DATABASE);
+    self::$_mysql = new mysqli(DB_HOST, DB_USERNAME, DB_PASSWORD, $database);
     self::$_mysql->autocommit(false);
   }
 
@@ -522,5 +527,4 @@ class Database implements DatabaseInterface {
 
     return $results;
   }
-
 }
