@@ -65,8 +65,7 @@ SQL;
     $this->assertSame(
       'via function',
       $data['test_attr3'],
-      'Derives from `defaultFunction` where specified (prefering over ' .
-        '`default` if present)'
+      'Derives from `defaultFunction` where specified (prefering over `default` if present)'
     );
   }
 
