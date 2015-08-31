@@ -19,11 +19,15 @@ class Model extends BaseModel {
       'default' => 'via value',
       'defaultFunction' => 'defaultFunction'
     ),
+    'test_attr4' => array(
+      'type' => 'bool',
+      'default' => 1
+    ),
     'inactive' => array('type' => 'bool')
   );
   protected $_db_primary_key = 'prim';
   protected $_attributes = array(
-    'test_attr1', 'test_attr2', 'test_attr3', 'inactive'
+    'test_attr1', 'test_attr2', 'test_attr3', 'test_attr4', 'inactive'
   );
 }
 
@@ -42,6 +46,7 @@ class BaseModelTest extends AEFrameworkTestCase
       `test_attr1` int(11) DEFAULT 0,
       `test_attr2` int(11) DEFAULT 0,
       `test_attr3` varchar(30) DEFAULT 'foo',
+      `test_attr4` bool DEFAULT 1,
       `inactive` bool DEFAULT 0,
       PRIMARY KEY (`prim`)
     );
@@ -213,7 +218,9 @@ SQL;
       'sets the primary key on the newly-inserted model object'
     );
 
-    $queryTable = $this->tableFromQuery('SELECT * FROM model_test_table');
+    $queryTable = $this->tableFromQuery(
+      'SELECT prim, test_attr1, test_attr2, test_attr3, inactive FROM model_test_table'
+    );
 
     $expectedTable = $this->tableFromArray(array(
       array(
@@ -257,7 +264,9 @@ SQL;
 
     $m->save();
 
-    $queryTable = $this->tableFromQuery('SELECT * FROM model_test_table');
+    $queryTable = $this->tableFromQuery(
+      'SELECT prim, test_attr1, test_attr2, test_attr3, inactive FROM model_test_table'
+    );
 
     $expectedTable = $this->tableFromArray(array(
       array(
@@ -294,7 +303,9 @@ SQL;
 
     $this->assertSame(1, $m->inactive);
 
-    $queryTable = $this->tableFromQuery('SELECT * FROM model_test_table');
+    $queryTable = $this->tableFromQuery(
+      'SELECT prim, test_attr1, test_attr2, test_attr3, inactive FROM model_test_table'
+    );
 
     $expectedTable = $this->tableFromArray(array(
       array(
@@ -341,7 +352,9 @@ SQL;
 
     $m->delete();
 
-    $queryTable = $this->tableFromQuery('SELECT * FROM model_test_table');
+    $queryTable = $this->tableFromQuery(
+      'SELECT prim, test_attr1, test_attr2, test_attr3, inactive FROM model_test_table'
+    );
 
     $expectedTable = $this->tableFromArray(array(
       array(
@@ -385,5 +398,102 @@ SQL;
     $this->assertSame($actual->test_attr1, 5);
     $this->assertSame($actual->test_attr2, 6);
     $this->assertSame($actual->test_attr3, 'foo');
+  }
+
+  public function testGetDBTable()
+  {
+    $this->assertSame('model_test_table', $this->m->get_db_table());
+  }
+
+  public function testGetJSONType()
+  {
+    $this->assertSame('test json type', $this->m->get_json_type());
+  }
+
+  public function testGetUserFriendlyData()
+  {
+    $this->m->test_attr1 = 1;
+    $this->m->test_attr2 = 2;
+    $this->m->test_attr3 = '3';
+    $this->m->test_attr4 = 0;
+    $this->m->inactive = 0;
+
+    $actual = $this->m->get_user_friendly_data();
+
+    $this->assertSame($actual['test_attr1'], 1);
+    $this->assertSame($actual['test_attr2'], 2);
+    $this->assertSame($actual['test_attr3'], '3');
+    $this->assertSame($actual['test_attr4'], false);
+    $this->assertArrayNotHasKey(
+      'inactive', $actual, 'removes the `inactive` attribute'
+    );
+
+    $this->m->test_attr1 = 1;
+    $this->m->test_attr2 = 2;
+    $this->m->test_attr3 = '3';
+    $this->m->test_attr4 = 1;
+    $this->m->inactive = 1;
+
+    $actual = $this->m->get_user_friendly_data();
+
+    $this->assertSame($actual['test_attr1'], 1);
+    $this->assertSame($actual['test_attr2'], 2);
+    $this->assertSame($actual['test_attr3'], '3');
+    $this->assertSame($actual['test_attr4'], true);
+    $this->assertArrayNotHasKey(
+      'inactive', $actual, 'removes the `inactive` attribute'
+    );
+  }
+
+  public function testGetDBSchema()
+  {
+    $schema = $this->m->get_db_schema();
+
+    $this->assertArrayHasKey('prim', $schema);
+    $this->assertArrayHasKey('type', $schema['prim']);
+    $this->assertSame('int', $schema['prim']['type']);
+
+    $this->assertArrayHasKey('test_attr1', $schema);
+    $this->assertArrayHasKey('type', $schema['test_attr1']);
+    $this->assertSame('int', $schema['test_attr1']['type']);
+
+    $this->assertArrayHasKey('test_attr2', $schema);
+    $this->assertArrayHasKey('type', $schema['test_attr2']);
+    $this->assertSame('int', $schema['test_attr2']['type']);
+
+    $this->assertArrayHasKey('test_attr3', $schema);
+    $this->assertArrayHasKey('type', $schema['test_attr3']);
+    $this->assertSame('string', $schema['test_attr3']['type']);
+    $this->assertArrayHasKey('default', $schema['test_attr3']);
+    $this->assertSame('via value', $schema['test_attr3']['default']);
+    $this->assertArrayHasKey('defaultFunction', $schema['test_attr3']);
+    $this->assertSame('defaultFunction', $schema['test_attr3']['defaultFunction']);
+
+    $this->assertArrayHasKey('test_attr4', $schema);
+    $this->assertArrayHasKey('type', $schema['test_attr4']);
+    $this->assertSame('bool', $schema['test_attr4']['type']);
+    $this->assertArrayHasKey('default', $schema['test_attr4']);
+    $this->assertSame(1, $schema['test_attr4']['default']);
+
+    $this->assertArrayHasKey('inactive', $schema);
+    $this->assertArrayHasKey('type', $schema['inactive']);
+    $this->assertSame('bool', $schema['inactive']['type']);
+  }
+
+  public function testGetDbPrimaryKey()
+  {
+    $this->assertSame('prim', $this->m->get_db_primary_key());
+  }
+
+  public function testGetAttributes()
+  {
+    $attrs = $this->m->get_attributes();
+
+    $this->assertTrue(in_array('test_attr1', $attrs));
+    $this->assertTrue(in_array('test_attr2', $attrs));
+    $this->assertTrue(in_array('test_attr3', $attrs));
+    $this->assertTrue(in_array('test_attr4', $attrs));
+    $this->assertTrue(in_array('inactive', $attrs));
+    $this->assertCount(5, $attrs);
   }
 }
