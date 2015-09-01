@@ -74,7 +74,7 @@ class Router Implements RouterInterface {
       // try instantiating the class so we can register any url pertaining to
       // that endpoint
       $class = $this->_get_class_name($file);
-      new $class($this);
+      $this->add_route(new $class());
     }
   }
 

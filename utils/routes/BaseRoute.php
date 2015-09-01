@@ -11,8 +11,6 @@ class BaseRoute {
 
   protected $_uri = 'none';
 
-  protected $_router;
-
   protected $_request;
 
   protected $_uri_data;
@@ -53,15 +51,6 @@ class BaseRoute {
 
     return array();
   }
-
-  /**
-   * Class constructor function.
-   */
-  public function __construct(Router $router) {
-    $this->_router = $router;
-    $this->_register_endpoint();
-  }
-
 
   public function set_uri_data() {
     $request_parts = $this->_request['base_url_parts'];
@@ -129,17 +118,4 @@ class BaseRoute {
 
     trigger_error($message, E_USER_ERROR);
   }
-
-  /**
-   * Registers our endpoint with slim itself.
-   *
-   * Note: This function takes care of registered the appropriate callbacks
-   * correctly so nothing is lost in translation.
-   *
-   * @return null
-   */
-  protected function _register_endpoint() {
-    $this->_router->add_route($this);
-  }
-
 }

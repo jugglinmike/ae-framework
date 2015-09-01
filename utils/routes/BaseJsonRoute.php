@@ -11,8 +11,7 @@ class BaseJsonRoute extends BaseRoute {
 
   protected $_model_object;
 
-  public function __construct(Router $router) {
-    Parent::__construct($router);
+  public function __construct() {
     $this->_validate_route();
   }
 
