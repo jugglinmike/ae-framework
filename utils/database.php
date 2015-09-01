@@ -43,6 +43,21 @@ class Database implements DatabaseInterface {
   protected static $_query_data = array();
 
   /**
+   * Parameter type descriptors used by MySQLI to bind PHP values to MySQL
+   * prepared statements.
+   *
+   * Reference:
+   * https://secure.php.net/manual/en/mysqli-stmt.bind-param.php
+   */
+  const MYSQLI_BIND_PARAM_TYPES = array(
+    'string' => 's',
+    'NULL' => 's',
+    'double' => 'd',
+    'integer' => 'i',
+    'boolean' => 'i'
+  );
+
+  /**
    * Blank constructor
    */
   public function __construct() {}
@@ -426,28 +441,18 @@ class Database implements DatabaseInterface {
    * @param mixed $value Data to be bound to the MySQLi statement later on.
    */
   public static function add_variable_binding($value) {
-    $type = self::_determine_variable_type($value);
+    $php_type = gettype($value);
+    $mysqli_type = self::MYSQLI_BIND_PARAM_TYPES[$php_type];
 
     // account for boolean variables that need to be converted to tinyints
-    if ($type === 'b') {
-      $type = 'i';
+    if ($php_type === 'boolean') {
       $value = ($value) ? 1 : 0;
     }
 
     self::$_variable_binds[] = array(
-      'type' => $type,
+      'type' => $mysqli_type,
       'value' => $value
     );
-  }
-
-  /**
-   * Determines the type of variable the passed value is.
-   *
-   * @param mixed $value Value to be assessed
-   * @return string character indicating the type of the value passed.
-   */
-  protected static function _determine_variable_type($value = '') {
-    return substr(gettype($value), 0, 1);
   }
 
   /**
