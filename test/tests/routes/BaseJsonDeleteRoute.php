@@ -109,7 +109,7 @@ SQL;
     ));
     $this->assertTablesEqual($expectedTable, $queryTable);
 
-    $this->assertNotEquals(null, $result['exception']);
+    $this->assertNull($result['exception']);
     $this->assertNotEquals(null, $result['decoded']);
     $this->assertCount(1, $result['decoded']);
     $this->assertEquals('NOT_FOUND', $result['decoded'][0]->code);

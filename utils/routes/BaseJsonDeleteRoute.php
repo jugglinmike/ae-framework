@@ -26,6 +26,7 @@ class BaseJsonDeleteRoute extends BaseJsonRoute {
         'detail' => $message
       );
       $res = JsonResHandler::render(array($error), 404);
+      return;
     }
 
     trigger_error($message, E_USER_ERROR);
