@@ -13,7 +13,7 @@ class Model extends BaseModel {
   protected $_db_schema = array(
     'prim' => array('type' => 'int'),
     'test_attr1' => array('type' => 'int'),
-    'test_attr2' => array('type' => 'int', 'default' => 45),
+    'test_attr2' => array('type' => 'float', 'default' => 45.),
     'test_attr3' => array(
       'type' => 'string',
       'default' => 'via value',
@@ -29,6 +29,7 @@ class Model extends BaseModel {
   protected $_attributes = array(
     'test_attr1', 'test_attr2', 'test_attr3', 'test_attr4', 'inactive'
   );
+  protected $_linked_tables = array('linked1', 'linked2');
 }
 
 class BaseModelTest extends AEFrameworkTestCase
@@ -44,7 +45,7 @@ class BaseModelTest extends AEFrameworkTestCase
     CREATE TABLE `model_test_table` (
       `prim` int(11) NOT NULL AUTO_INCREMENT,
       `test_attr1` int(11) DEFAULT 0,
-      `test_attr2` int(11) DEFAULT 0,
+      `test_attr2` float DEFAULT 0,
       `test_attr3` varchar(30) DEFAULT 'foo',
       `test_attr4` bool DEFAULT 1,
       `inactive` bool DEFAULT 0,
@@ -66,7 +67,7 @@ SQL;
       $data['test_attr1'],
       'Uses `null` as default value when no value is specified'
     );
-    $this->assertSame(45, $data['test_attr2']);
+    $this->assertSame(45., $data['test_attr2']);
     $this->assertSame(
       'via function',
       $data['test_attr3'],
@@ -82,7 +83,7 @@ SQL;
 
     $this->assertSame(2, $data['prim']);
     $this->assertSame(5, $data['test_attr1']);
-    $this->assertSame(6, $data['test_attr2']);
+    $this->assertSame(6., $data['test_attr2']);
     $this->assertSame('foo', $data['test_attr3']);
     $this->assertArrayNotHasKey(
       'inactive', $data, 'removes the `inactive` attribute'
@@ -97,7 +98,7 @@ SQL;
 
     $this->assertSame(3, $data['prim']);
     $this->assertSame(5, $data['test_attr1']);
-    $this->assertSame(7, $data['test_attr2']);
+    $this->assertSame(7., $data['test_attr2']);
     $this->assertSame('foo', $data['test_attr3']);
     $this->assertArrayNotHasKey(
       'inactive', $data, 'removes the `inactive` attribute'
@@ -132,13 +133,13 @@ SQL;
 
   public function testInitFromArrayWithoutId()
   {
-    $r = new Model(array( 'test_attr2' => 6, 'test_attr1' => 4 ));
+    $r = new Model(array( 'test_attr2' => 6., 'test_attr1' => 4 ));
 
     $data = $r->get_data();
 
     $this->assertSame(1, $data['prim']);
     $this->assertSame(4, $data['test_attr1']);
-    $this->assertSame(6, $data['test_attr2']);
+    $this->assertSame(6., $data['test_attr2']);
     $this->assertSame('foo', $data['test_attr3']);
     $this->assertArrayNotHasKey(
       'inactive', $data, 'removes the `inactive` attribute'
@@ -207,7 +208,7 @@ SQL;
   public function testSaveCreate()
   {
     $this->m->test_attr1 = 45;
-    $this->m->test_attr2 = 86;
+    $this->m->test_attr2 = 86.;
     $this->m->inactive = 1;
 
     $this->m->save();
@@ -259,7 +260,7 @@ SQL;
   {
     $m = new Model(2);
     $m->test_attr1 = 45;
-    $m->test_attr2 = 86;
+    $m->test_attr2 = 86.;
     $m->inactive = 1;
 
     $m->save();
@@ -378,13 +379,13 @@ SQL;
   public function testToJsonNew()
   {
     $this->m->test_attr1 = 333;
-    $this->m->test_attr2 = 444;
+    $this->m->test_attr2 = 444.1;
     $this->m->test_attr3 = 'mosey';
 
     $actual = json_decode($this->m->to_json());
 
     $this->assertSame($actual->test_attr1, 333);
-    $this->assertSame($actual->test_attr2, 444);
+    $this->assertSame($actual->test_attr2, 444.1);
     $this->assertSame($actual->test_attr3, 'mosey');
     $this->assertSame($actual->inactive, null);
   }
@@ -413,7 +414,7 @@ SQL;
   public function testGetUserFriendlyData()
   {
     $this->m->test_attr1 = 1;
-    $this->m->test_attr2 = 2;
+    $this->m->test_attr2 = 2.;
     $this->m->test_attr3 = '3';
     $this->m->test_attr4 = 0;
     $this->m->inactive = 0;
@@ -421,7 +422,7 @@ SQL;
     $actual = $this->m->get_user_friendly_data();
 
     $this->assertSame($actual['test_attr1'], 1);
-    $this->assertSame($actual['test_attr2'], 2);
+    $this->assertSame($actual['test_attr2'], 2.);
     $this->assertSame($actual['test_attr3'], '3');
     $this->assertSame($actual['test_attr4'], false);
     $this->assertArrayNotHasKey(
@@ -429,7 +430,7 @@ SQL;
     );
 
     $this->m->test_attr1 = 1;
-    $this->m->test_attr2 = 2;
+    $this->m->test_attr2 = 2.;
     $this->m->test_attr3 = '3';
     $this->m->test_attr4 = 1;
     $this->m->inactive = 1;
@@ -437,7 +438,7 @@ SQL;
     $actual = $this->m->get_user_friendly_data();
 
     $this->assertSame($actual['test_attr1'], 1);
-    $this->assertSame($actual['test_attr2'], 2);
+    $this->assertSame($actual['test_attr2'], 2.);
     $this->assertSame($actual['test_attr3'], '3');
     $this->assertSame($actual['test_attr4'], true);
     $this->assertArrayNotHasKey(
@@ -459,7 +460,7 @@ SQL;
 
     $this->assertArrayHasKey('test_attr2', $schema);
     $this->assertArrayHasKey('type', $schema['test_attr2']);
-    $this->assertSame('int', $schema['test_attr2']['type']);
+    $this->assertSame('float', $schema['test_attr2']['type']);
 
     $this->assertArrayHasKey('test_attr3', $schema);
     $this->assertArrayHasKey('type', $schema['test_attr3']);
@@ -495,5 +496,129 @@ SQL;
     $this->assertTrue(in_array('test_attr4', $attrs));
     $this->assertTrue(in_array('inactive', $attrs));
     $this->assertCount(5, $attrs);
+  }
+
+  public function testGetLinkedTables()
+  {
+    $tables = $this->m->get_linked_tables();
+
+    $this->assertTrue(in_array('linked1', $tables));
+    $this->assertTrue(in_array('linked2', $tables));
+  }
+
+  public function testIsValidAttribute()
+  {
+    $this->assertFalse(
+      $this->m->is_valid_attribute('prim'), 'The primary key is not an "attribute"'
+    );
+
+    $this->assertTrue($this->m->is_valid_attribute('test_attr1'));
+    $this->assertTrue($this->m->is_valid_attribute('test_attr2'));
+    $this->assertTrue($this->m->is_valid_attribute('test_attr3'));
+    $this->assertTrue($this->m->is_valid_attribute('test_attr4'));
+    $this->assertTrue($this->m->is_valid_attribute('inactive'));
+
+    $this->assertFalse($this->m->is_valid_attribute('test_attr5'));
+  }
+
+  public function testIsValidDBField()
+  {
+    $this->assertTrue($this->m->is_valid_db_field('prim'));
+    $this->assertTrue($this->m->is_valid_db_field('test_attr1'));
+    $this->assertTrue($this->m->is_valid_db_field('test_attr2'));
+    $this->assertTrue($this->m->is_valid_db_field('test_attr3'));
+    $this->assertTrue($this->m->is_valid_db_field('test_attr4'));
+    $this->assertTrue($this->m->is_valid_db_field('inactive'));
+
+    $this->assertFalse($this->m->is_valid_db_field('test_attr5'));
+  }
+
+  public function testIsValidDBFieldValue()
+  {
+    $this->assertTrue($this->m->is_valid_db_field_value('prim', 86));
+    $this->assertFalse($this->m->is_valid_db_field_value('prim', ''));
+    $this->assertFalse($this->m->is_valid_db_field_value('prim', true));
+    $this->assertFalse($this->m->is_valid_db_field_value('prim', 86.));
+    $this->assertFalse($this->m->is_valid_db_field_value('prim', null));
+    $this->assertFalse($this->m->is_valid_db_field_value('prim'));
+
+    $this->assertTrue($this->m->is_valid_db_field_value('test_attr1', 86));
+    $this->assertFalse($this->m->is_valid_db_field_value('test_attr1', ''));
+    $this->assertFalse($this->m->is_valid_db_field_value('test_attr1', true));
+    $this->assertFalse($this->m->is_valid_db_field_value('test_attr1', 86.));
+    $this->assertFalse($this->m->is_valid_db_field_value('test_attr1', null));
+    $this->assertFalse($this->m->is_valid_db_field_value('test_attr1'));
+
+    $this->assertTrue($this->m->is_valid_db_field_value('test_attr2', 86.));
+    $this->assertFalse($this->m->is_valid_db_field_value('test_attr2', ''));
+    $this->assertFalse($this->m->is_valid_db_field_value('test_attr2', true));
+    $this->assertFalse($this->m->is_valid_db_field_value('test_attr2', 86));
+    $this->assertFalse($this->m->is_valid_db_field_value('test_attr2', null));
+    $this->assertFalse($this->m->is_valid_db_field_value('test_attr2'));
+
+    $this->assertTrue($this->m->is_valid_db_field_value('test_attr3', ''));
+    $this->assertFalse($this->m->is_valid_db_field_value('test_attr3', 86));
+    $this->assertFalse($this->m->is_valid_db_field_value('test_attr3', true));
+    $this->assertFalse($this->m->is_valid_db_field_value('test_attr3', 86.));
+    $this->assertFalse($this->m->is_valid_db_field_value('test_attr3', null));
+    $this->assertTrue($this->m->is_valid_db_field_value('test_attr3'));
+
+    $this->assertTrue($this->m->is_valid_db_field_value('test_attr4', true));
+    $this->assertTrue($this->m->is_valid_db_field_value('test_attr4', false));
+    $this->assertFalse($this->m->is_valid_db_field_value('test_attr4', 86));
+    $this->assertFalse($this->m->is_valid_db_field_value('test_attr4', ''));
+    $this->assertFalse($this->m->is_valid_db_field_value('test_attr4', 86.));
+    $this->assertFalse($this->m->is_valid_db_field_value('test_attr4', null));
+    $this->assertFalse($this->m->is_valid_db_field_value('test_attr4'));
+
+    $this->assertTrue($this->m->is_valid_db_field_value('inactive', true));
+    $this->assertTrue($this->m->is_valid_db_field_value('inactive', false));
+    $this->assertFalse($this->m->is_valid_db_field_value('inactive', 86));
+    $this->assertFalse($this->m->is_valid_db_field_value('inactive', ''));
+    $this->assertFalse($this->m->is_valid_db_field_value('inactive', 86.));
+    $this->assertFalse($this->m->is_valid_db_field_value('inactive', null));
+    $this->assertFalse($this->m->is_valid_db_field_value('inactive'));
+
+    $this->assertFalse($this->m->is_valid_db_field_value('test_attr5', 'int'));
+    $this->assertFalse($this->m->is_valid_db_field_value('test_attr5'));
+    $this->assertFalse($this->m->is_valid_db_field_value());
+  }
+
+  public function testIsValidSchemaType()
+  {
+    $this->assertTrue($this->m->is_valid_schema_type('int'));
+    $this->assertTrue($this->m->is_valid_schema_type('string'));
+    $this->assertTrue($this->m->is_valid_schema_type('bool'));
+    $this->assertTrue($this->m->is_valid_schema_type('float'));
+
+    $this->assertFalse($this->m->is_valid_schema_type());
+    $this->assertFalse($this->m->is_valid_schema_type('ints'));
+    $this->assertFalse($this->m->is_valid_schema_type('tinyint'));
+    $this->assertFalse($this->m->is_valid_schema_type('double'));
+    $this->assertFalse($this->m->is_valid_schema_type('varchar'));
+  }
+
+  public function testSanitizeDBFieldValue()
+  {
+    $this->assertSame($this->m->sanitize_db_field_value('prim', 1), 1);
+    $this->assertSame($this->m->sanitize_db_field_value('prim', 1.2), 1);
+    $this->assertSame($this->m->sanitize_db_field_value('prim', '2.999'), 2);
+    $this->assertSame($this->m->sanitize_db_field_value('prim', true), 1);
+    $this->assertSame($this->m->sanitize_db_field_value('prim', false), 0);
+    $this->assertSame($this->m->sanitize_db_field_value('prim', null), 0);
+
+    $this->assertSame($this->m->sanitize_db_field_value('test_attr2', 1), 1.);
+    $this->assertSame($this->m->sanitize_db_field_value('test_attr2', 1.2), 1.2);
+    $this->assertSame($this->m->sanitize_db_field_value('test_attr2', '2.999'), 2.999);
+    $this->assertSame($this->m->sanitize_db_field_value('test_attr2', true), 1.);
+    $this->assertSame($this->m->sanitize_db_field_value('test_attr2', false), 0.);
+    $this->assertSame($this->m->sanitize_db_field_value('test_attr2', null), 0.);
+
+    $this->assertSame($this->m->sanitize_db_field_value('test_attr3', 1), '1');
+    $this->assertSame($this->m->sanitize_db_field_value('test_attr3', 1.2), '1.2');
+    $this->assertSame($this->m->sanitize_db_field_value('test_attr3', '2.999'), '2.999');
+    $this->assertSame($this->m->sanitize_db_field_value('test_attr3', true), '1');
+    $this->assertSame($this->m->sanitize_db_field_value('test_attr3', false), '');
+    $this->assertSame($this->m->sanitize_db_field_value('test_attr3', null), '');
   }
 }
