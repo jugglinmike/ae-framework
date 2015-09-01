@@ -23,7 +23,7 @@ class Model extends BaseModel {
       'type' => 'bool',
       'default' => 1
     ),
-    'inactive' => array('type' => 'bool')
+    'inactive' => array('type' => 'bool', 'default' => null)
   );
   protected $_db_primary_key = 'prim';
   protected $_attributes = array(
@@ -251,6 +251,56 @@ SQL;
         'test_attr2' => 86,
         'test_attr3' => 'via function',
         'inactive' => 1
+      )
+    ));
+    $this->assertTablesEqual($expectedTable, $queryTable);
+  }
+
+  public function testSaveCreateWithNullDefault()
+  {
+    $this->m->test_attr1 = 45;
+    $this->m->test_attr2 = 86.;
+
+    $this->m->save();
+
+    $this->assertSame(
+      $this->m->prim,
+      4,
+      'sets the primary key on the newly-inserted model object'
+    );
+
+    $queryTable = $this->tableFromQuery(
+      'SELECT prim, test_attr1, test_attr2, test_attr3, inactive FROM model_test_table'
+    );
+
+    $expectedTable = $this->tableFromArray(array(
+      array(
+        'prim' => 1,
+        'test_attr1' => 4,
+        'test_attr2' => 6,
+        'test_attr3' => 'foo',
+        'inactive' => 0
+      ),
+      array(
+        'prim' => 2,
+        'test_attr1' => 5,
+        'test_attr2' => 6,
+        'test_attr3' => 'foo',
+        'inactive' => 0
+      ),
+      array(
+        'prim' => 3,
+        'test_attr1' => 5,
+        'test_attr2' => 7,
+        'test_attr3' => 'foo',
+        'inactive' => 0
+      ),
+      array(
+        'prim' => 4,
+        'test_attr1' => 45,
+        'test_attr2' => 86,
+        'test_attr3' => 'via function',
+        'inactive' => null
       )
     ));
     $this->assertTablesEqual($expectedTable, $queryTable);
