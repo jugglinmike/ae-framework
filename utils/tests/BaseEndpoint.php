@@ -1,6 +1,6 @@
 <?php
 abstract class BaseEndpoint extends PHPUnit_Extensions_Database_TestCase {
-  const API_BASE_URL = 'http://auth.dev/' . VERSION . '/';
+  const API_BASE_URL = 'http://auth.dev/test/' . VERSION . '/';
   protected $_guzzle = null;
   static private $_pdo = null;
   protected $_conn = null;
