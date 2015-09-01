@@ -11,10 +11,10 @@ abstract class BaseServiceTest extends PHPUnit_Extensions_Database_TestCase {
     if (!$this->_conn) {
       if (!self::$_pdo) {
         self::$_pdo = new PDO('mysql:host=' . DB_HOST .';dbname=' .
-          DB_DATABASE , DB_USERNAME , DB_PASSWORD);
+          TEST_DB_DATABASE , DB_USERNAME , DB_PASSWORD);
       }
 
-      $this->_conn = $this->createDefaultDBConnection(self::$_pdo, DB_DATABASE);
+      $this->_conn = $this->createDefaultDBConnection(self::$_pdo, TEST_DB_DATABASE);
     }
 
     return $this->_conn;
@@ -90,6 +90,11 @@ abstract class BaseServiceTest extends PHPUnit_Extensions_Database_TestCase {
         throw new Exception('Specify table data to delete as an array.');
       }
     }
+  }
+
+  public function truncate($table){
+    $query = 'SET FOREIGN_KEY_CHECKS=0; truncate `' . $table . '`; SET FOREIGN_KEY_CHECKS=1;';
+    $this->_conn->getConnection()->exec($query);
   }
 
   public function tearDown() {
