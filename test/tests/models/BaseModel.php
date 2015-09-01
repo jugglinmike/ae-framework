@@ -2,11 +2,6 @@
 require_once(__DIR__ . '/../../../utils/models/BaseModel.php');
 require_once(__DIR__ . '/../../AEFrameworkTestCase.php');
 
-function defaultFunction()
-{
-  return 'via function';
-}
-
 class Model extends BaseModel {
   protected $_json_type = 'test json type';
   protected $_db_table = 'model_test_table';
@@ -16,8 +11,7 @@ class Model extends BaseModel {
     'test_attr2' => array('type' => 'float', 'default' => 45.),
     'test_attr3' => array(
       'type' => 'string',
-      'default' => 'via value',
-      'defaultFunction' => 'defaultFunction'
+      'default' => 'via value'
     ),
     'test_attr4' => array(
       'type' => 'bool',
@@ -30,6 +24,15 @@ class Model extends BaseModel {
     'test_attr1', 'test_attr2', 'test_attr3', 'test_attr4', 'inactive'
   );
   protected $_linked_tables = array('linked1', 'linked2');
+
+  public function __construct($identifier = null)
+  {
+    $this->_db_schema['test_attr3']['defaultFunction'] = function() {
+      return 'via function';
+    };
+
+    parent::__construct($identifier);
+  }
 }
 
 class BaseModelTest extends AEFrameworkTestCase
@@ -518,7 +521,6 @@ SQL;
     $this->assertArrayHasKey('default', $schema['test_attr3']);
     $this->assertSame('via value', $schema['test_attr3']['default']);
     $this->assertArrayHasKey('defaultFunction', $schema['test_attr3']);
-    $this->assertSame('defaultFunction', $schema['test_attr3']['defaultFunction']);
 
     $this->assertArrayHasKey('test_attr4', $schema);
     $this->assertArrayHasKey('type', $schema['test_attr4']);
