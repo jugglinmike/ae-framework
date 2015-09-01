@@ -65,6 +65,73 @@ class BaseRoute {
     }
   }
 
+  /**
+   * Retrieve the value of a given header in a request.
+   *
+   * Header field names are case-insensitive, so dereferencing the `headers`
+   * array with a single key may not yield the desired results.
+   *
+   * Reference:
+   * http://www.w3.org/Protocols/rfc2616/rfc2616-sec4.html#sec4.2
+   *
+   * @param array $request
+   * @param string $name the name of the header to retrieve
+   *
+   * @return string|null The header value if present, `null` otherwise
+   */
+  private static function _get_header($request, $name)
+  {
+    $name = strtolower($name);
+
+    foreach ($request['headers'] as $header_name => $header_value) {
+      if (strtolower($header_name) === $name) {
+        return $header_value;
+      }
+    }
+
+    return null;
+  }
+
+  /**
+   * Create an associative array containing the data described by the current
+   * request's body, parsed according to the request's `Content-Type` field.
+   *
+   * Supported types:
+   *
+   * - application/x-www-form-urlencoded
+   * - application/json
+   *
+   * See RFC 2046 for details on MIME type formatting:
+   * https://www.ietf.org/rfc/rfc2046.txt
+   *
+   * @return string|array The parsed body in the case of a supported
+   *                      `Content-Type`; the "raw" body in string form
+   *                      otherwise
+   */
+  public function parseRequestBody()
+  {
+    $request = $this->_request;
+    $content_type = self::_get_header($request, 'content-type');
+
+    if ($content_type !== null) {
+      $type_and_subtype = explode(';', $content_type, 2)[0];
+
+      if ($type_and_subtype === 'application/x-www-form-urlencoded') {
+        return $request['post'];
+      } else if ($type_and_subtype === 'application/json') {
+        $decoded = @json_decode($request['body'], true);
+
+        if (json_last_error() !== JSON_ERROR_NONE) {
+          throw new UnexpectedValueException(json_last_error_msg());
+        }
+
+        return $decoded;
+      }
+    }
+
+    return $request['body'];
+  }
+
   public function validate_url() {
     $dependencies = array();
 
