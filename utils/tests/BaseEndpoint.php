@@ -98,7 +98,10 @@ abstract class BaseEndpoint extends PHPUnit_Extensions_Database_TestCase {
 
       $response = $this->_guzzle->$method($url, $data);
     } else {
-      $response = $this->_guzzle->$method($url);
+      $data = array(
+        'exceptions' => false
+      );
+      $response = $this->_guzzle->$method($url, $data);
     }
 
     return $response;
