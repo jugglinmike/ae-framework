@@ -82,7 +82,7 @@ class Database implements DatabaseInterface {
 
     //throw errors, but not too many
     mysqli_report(MYSQLI_REPORT_ERROR | MYSQLI_REPORT_STRICT);
-    if (defined('TESTMODE')) {
+    if (TESTMODE === 'true') {
       $database = TEST_DB_DATABASE;
     } else {
       $database = DB_DATABASE;
