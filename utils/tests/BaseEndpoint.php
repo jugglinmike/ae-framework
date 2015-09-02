@@ -146,7 +146,10 @@ abstract class BaseEndpoint extends PHPUnit_Extensions_Database_TestCase {
   public function tearDown() {
     //always remove the dataset
     $dataset = $this->_data_set;
-    $this->_db_remove_rows($dataset);
+    foreach ($dataset as $table => $row) {
+      $this->truncate($table);
+    }
+
     parent::tearDown();
   }
 
