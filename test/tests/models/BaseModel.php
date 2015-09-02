@@ -11,7 +11,8 @@ class Model extends BaseModel {
     'test_attr2' => array('type' => 'float', 'default' => 45.),
     'test_attr3' => array(
       'type' => 'string',
-      'default' => 'via value'
+      'default' => 'via value',
+      'defaultFunction' => 'Model::attr3DefaultFunction'
     ),
     'test_attr4' => array(
       'type' => 'bool',
@@ -25,13 +26,8 @@ class Model extends BaseModel {
   );
   protected $_linked_tables = array('linked1', 'linked2');
 
-  public function __construct($identifier = null)
-  {
-    $this->_db_schema['test_attr3']['defaultFunction'] = function() {
-      return 'via function';
-    };
-
-    parent::__construct($identifier);
+  static public function attr3DefaultFunction() {
+    return 'via function';
   }
 }
 
