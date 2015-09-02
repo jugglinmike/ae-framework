@@ -152,11 +152,7 @@ class BaseModel {
       $default = array_key_exists('default', $info) ? $info['default'] : null;
       if (array_key_exists('defaultFunction', $info)) {
         if (is_callable($info['defaultFunction'])) {
-          if (is_array($info['defaultFunction'])) {
-            $this->_data[$attr] = call_user_func_array($info['defaultFunction']);
-          } else {
-            $this->_data[$attr] = call_user_func($info['defaultFunction']);
-          }
+          $this->_data[$attr] = call_user_func($info['defaultFunction']);
         } else {
           throw new Exception('defaultFunction was provided but is not callable');
         }
