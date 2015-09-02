@@ -4,13 +4,12 @@ class BaseJsonGetOneRoute extends BaseJsonRoute {
 
   public function render($identifier = null) {
     $search = $this->sanitize_model_identifer($identifier);
-    $class_name = $this->get_model_class();
     $include = $this->get_include();
     //make sure it's not been soft deleted
     $search['inactive'] = 0;
 
     try {
-      $model = new $class_name($search);
+      $model = $this->createModel($search);
       $data = $model->get_linked_data($include);
       $res = JsonResHandler::render($this->dashKeys($data), 200);
     } catch (Exception $err) {

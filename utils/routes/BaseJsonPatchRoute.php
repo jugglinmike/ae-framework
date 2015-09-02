@@ -100,11 +100,10 @@ class BaseJsonPatchRoute extends BaseJsonRoute {
 
   protected function _get_model($identifier = null) {
     $identifier = $this->sanitize_model_identifer($identifier);
-    $class_name = $this->get_model_class();
 
     try {
       // fetch the model and then return it
-      $model = new $class_name($identifier);
+      $model = $this->createModel($identifier);
       return $model;
     } catch (Exception $error) {
       $this->_handle_get_model_error($error);

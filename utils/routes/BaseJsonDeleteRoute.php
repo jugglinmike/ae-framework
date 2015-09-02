@@ -4,12 +4,11 @@ class BaseJsonDeleteRoute extends BaseJsonRoute {
 
   public function delete($identifier = null) {
     $identifier = $this->sanitize_model_identifer($identifier);
-    $class_name = $this->get_model_class();
 
     try {
       // retrieve the existing model (if it exists) and then
       // flag it as inactive
-      $model = new $class_name($identifier);
+      $model = $this->createModel($identifier);
       $model->soft_delete();
       http_response_code(204);
     } catch (Exception $err) {

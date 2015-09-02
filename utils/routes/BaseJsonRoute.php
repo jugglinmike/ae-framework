@@ -37,6 +37,10 @@ class BaseJsonRoute extends BaseRoute {
     return $this->_model_class;
   }
 
+  public function createModel() {
+    return new $this->_model_class(...func_get_args());
+  }
+
   public function sanitize_model_identifer($identifier = null) {
     $model = $this->_model;
 

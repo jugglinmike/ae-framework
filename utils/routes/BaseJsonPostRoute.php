@@ -48,8 +48,7 @@ class BaseJsonPostRoute extends BaseJsonRoute {
     $data = $this->_sanitize_data($data);
 
     // finally, create this new model
-    $class_name = $this->get_model_class();
-    $model = new $class_name();
+    $model = $this->createModel();
 
     // iterate through all of the posted data, setting it on the model object
     foreach ($data as $property => $value) {
