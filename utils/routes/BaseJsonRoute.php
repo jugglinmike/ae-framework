@@ -9,32 +9,36 @@ class BaseJsonRoute extends BaseRoute {
    * @var array
    */
 
-  protected $_model_object;
+  protected $_model_class;
+  protected $_model;
 
   public function __construct(Router $router) {
     Parent::__construct($router);
     $this->_validate_route();
+    $this->_model = new $this->_model_class();
   }
 
   protected function _validate_route() {
     // ensure that the model object was set correctly
-    if (!isset($this->_model_object)) {
-      trigger_error('Please set the `_model_object` on this route before using it', E_USER_ERROR);
-    } else if (!($this->_model_object instanceof BaseModel)) {
-      trigger_error('Invalid `_model_object`; Must be an instance of `BaseModel`', E_USER_ERROR);
+    if (!isset($this->_model_class)) {
+      trigger_error('Please set the `_model_class` on this route before using it', E_USER_ERROR);
+    } else if (class_exists($this->_model_class) === false) {
+      trigger_error('Invalid `_model_class`; class not defined', E_USER_ERROR);
+    } else if (!is_subclass_of($this->_model_class, 'BaseModel')) {
+      trigger_error('Invalid `_model_class`; Must be a subclass of `BaseModel`', E_USER_ERROR);
     }
   }
 
   public function get_model_object() {
-    return $this->_model_object;
+    return $this->_model;
   }
 
   public function get_model_class() {
-    return get_class($this->_model_object);
+    return $this->_model_class;
   }
 
   public function sanitize_model_identifer($identifier = null) {
-    $model = $this->get_model_object();
+    $model = $this->_model;
 
     // if this was not an array of search params, assume it was the primary
     // identifier for this table and convert it to an array

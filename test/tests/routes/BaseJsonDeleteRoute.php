@@ -4,11 +4,7 @@ require_once(__DIR__ . '/../../AEFrameworkTestCase.php');
 require_once(__DIR__ . '/../../TestModel.php');
 
 class JsonDeleteRoute extends BaseJsonDeleteRoute {
-  public function __construct($router)
-  {
-    $this->_model_object = new TestModel();
-    Parent::__construct($router);
-  }
+  protected $_model_class = 'TestModel';
 }
 
 class BaseJsonDeleteRouteTest extends AEFrameworkTestCase
