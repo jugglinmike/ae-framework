@@ -86,7 +86,7 @@ abstract class BaseEndpoint extends PHPUnit_Extensions_Database_TestCase {
       throw new Exception('Invalid guzzle HTTP method specified');
     }
 
-    if ($method === 'post' || $method === 'patch') {
+    if ($method === 'post' || $method === 'patch' || $method === 'put') {
       if (is_null($data)) {
         throw new Exception('Please specify valid data to ' . $method);
       }
