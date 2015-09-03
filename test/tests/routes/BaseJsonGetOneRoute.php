@@ -74,6 +74,32 @@ SQL;
     $this->assertEquals(200, http_response_code());
   }
 
+  public function testGetNotFound()
+  {
+    $result = $this->captureResponse(function($self) {
+      $self->r->render(array( 'prim' => 999 ));
+    });
+
+    $this->assertNull($result['exception']);
+
+    $this->assertCount(1, $result['decoded']);
+
+    $this->assertSame('NOT_FOUND', $result['decoded'][0]->code);
+    $this->assertObjectHasAttribute('detail', $result['decoded'][0]);
+
+    $this->assertEquals(404, http_response_code());
+  }
+
+  public function testGetIncludeUnsupported()
+  {
+    $this->r->set_request(array( 'query_params' => array('include' => 'foo') ));
+    $result = $this->captureResponse(function($self) {
+      $self->r->render(array( 'prim' => 1 ));
+    });
+
+    $this->assertNotNull($result['exception']);
+  }
+
   public function testGetByIdLiteral()
   {
     $result = $this->captureResponse(function($self) {
