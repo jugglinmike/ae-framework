@@ -82,7 +82,16 @@ abstract class BaseEndpoint extends PHPUnit_Extensions_Database_TestCase {
 
   const HTTP_METHODS_REQUIRING_DATA = array('post', 'patch', 'put');
 
-  protected function _fetch_results($url, $method, $data = null) {
+  /**
+   * Perform an HTTP request.
+   *
+   * @param string $url The location where the request should be sent
+   * @param string $method The HTTP verb to use
+   * @param array $options Optional modifiers for the request as supported by
+   *                       version 3 of the "Guzzle" library. Reference:
+   *                       https://guzzle3.readthedocs.org/http-client/client.html#request-options
+   */
+  private function _request($url, $method, $options = array()) {
     $method = strtolower($method);
     if (!method_exists($this->_guzzle, $method)) {
       throw new Exception('Invalid guzzle HTTP method specified');
@@ -90,19 +99,37 @@ abstract class BaseEndpoint extends PHPUnit_Extensions_Database_TestCase {
 
     // Disable exceptions in order to simplify process of testing expected HTTP
     // errors
-    $options = array( 'exceptions' => false );
+    $options = array_merge( $options, array( 'exceptions' => false ));
 
     if (in_array($method, self::HTTP_METHODS_REQUIRING_DATA)) {
-      if (is_null($data)) {
+      if (!array_key_exists('body', $options)) {
         throw new Exception('Please specify valid data to ' . $method);
       }
+    }
 
+    return $this->_guzzle->$method($url, $options);
+  }
+
+  protected function _fetch_results($url, $method, $data = null) {
+    $options = array();
+
+    if ($data !== null) {
       $options['body'] = $data;
     }
 
-    $response = $this->_guzzle->$method($url, $options);
+    return $this->_request($url, $method, $options);
+  }
 
-    return $response;
+  protected function _fetch_results_json($url, $method, $data = null) {
+    $options = array(
+      'headers' => array( 'Content-Type' => 'application/json' )
+    );
+
+    if ($data !== null) {
+      $options['body'] = json_encode($data);
+    }
+
+    return $this->_request($url, $method, $options);
   }
 
   protected function _db_get_by_id($table, $id) {
