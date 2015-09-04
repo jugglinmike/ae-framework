@@ -91,7 +91,7 @@ abstract class BaseEndpoint extends PHPUnit_Extensions_Database_TestCase {
    *                       version 3 of the "Guzzle" library. Reference:
    *                       https://guzzle3.readthedocs.org/http-client/client.html#request-options
    */
-  protected function _fetch_results($url, $method, $options = array()) {
+  private function _request($url, $method, $options = array()) {
     $method = strtolower($method);
     if (!method_exists($this->_guzzle, $method)) {
       throw new Exception('Invalid guzzle HTTP method specified');
@@ -107,9 +107,29 @@ abstract class BaseEndpoint extends PHPUnit_Extensions_Database_TestCase {
       }
     }
 
-    $response = $this->_guzzle->$method($url, $options);
+    return $this->_guzzle->$method($url, $options);
+  }
 
-    return $response;
+  protected function _fetch_results($url, $method, $data = null) {
+    $options = array();
+
+    if ($data !== null) {
+      $options['body'] = $data;
+    }
+
+    return $this->_request($url, $method, $options);
+  }
+
+  protected function _fetch_results_json($url, $method, $data = null) {
+    $options = array(
+      'headers' => array( 'Content-Type' => 'application/json' )
+    );
+
+    if ($data !== null) {
+      $options['body'] = json_encode($data);
+    }
+
+    return $this->_request($url, $method, $options);
   }
 
   protected function _db_get_by_id($table, $id) {
