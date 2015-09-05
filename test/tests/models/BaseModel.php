@@ -668,5 +668,12 @@ SQL;
     $this->assertSame($this->m->sanitize_db_field_value('test_attr3', true), '1');
     $this->assertSame($this->m->sanitize_db_field_value('test_attr3', false), '');
     $this->assertSame($this->m->sanitize_db_field_value('test_attr3', null), '');
+
+    $this->assertSame($this->m->sanitize_db_field_value('inactive', true), 1);
+    $this->assertSame($this->m->sanitize_db_field_value('inactive', '1'), 1);
+    $this->assertSame($this->m->sanitize_db_field_value('inactive', 1), 1);
+    $this->assertSame($this->m->sanitize_db_field_value('inactive', 'TRUE'), 1);
+    $this->assertSame($this->m->sanitize_db_field_value('inactive', 'true'), 1);
+    $this->assertSame($this->m->sanitize_db_field_value('inactive', false), 0);
   }
 }

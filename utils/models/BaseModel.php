@@ -628,7 +628,8 @@ class BaseModel {
         break;
       case 'bool':
         // bind param in mysqli needs booleans to be integers
-        $value = ($value === '1' || strtolower($value) === 'true') ? 1 : 0;
+        $string_version = strtolower($value);
+        $value = ($string_version === '1' || $string_version === 'true') ? 1 : 0;
         break;
       case 'string':
         $value = (string) $value;
