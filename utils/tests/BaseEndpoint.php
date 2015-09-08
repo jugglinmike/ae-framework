@@ -1,6 +1,8 @@
 <?php
 abstract class BaseEndpoint extends PHPUnit_Extensions_Database_TestCase {
-  const API_BASE_URL = 'http://auth.dev/test/' . VERSION . '/';
+  protected $_request_base_url = null;
+  protected $_db_credentials = null;
+
   protected $_guzzle = null;
   static private $_pdo = null;
   protected $_conn = null;
@@ -9,12 +11,21 @@ abstract class BaseEndpoint extends PHPUnit_Extensions_Database_TestCase {
 
   public function getConnection() {
     if (!$this->_conn) {
+      $this->assertNotNull(
+        $this->_db_credentials, 'Database credentials specified'
+      );
+
       if (!self::$_pdo) {
-        self::$_pdo = new PDO('mysql:host=' . DB_HOST .';dbname=' .
-         TEST_DB_DATABASE , DB_USERNAME , DB_PASSWORD);
+        self::$_pdo = new PDO(
+          'mysql:host=' . $this->_db_credentials['host'] .';dbname=' . $this->_db_credentials['database'],
+          $this->_db_credentials['username'],
+          $this->_db_credentials['password']
+        );
       }
 
-      $this->_conn = $this->createDefaultDBConnection(self::$_pdo, TEST_DB_DATABASE);
+      $this->_conn = $this->createDefaultDBConnection(
+        self::$_pdo, $this->_db_credentials['database']
+      );
     }
 
     return $this->_conn;
@@ -26,8 +37,12 @@ abstract class BaseEndpoint extends PHPUnit_Extensions_Database_TestCase {
   }
 
   protected function setUp() {
+    $this->assertNotNull(
+      $this->_request_base_url, 'Base URL for web requests specified'
+    );
+
     $params = array(
-      'base_url' => self::API_BASE_URL
+      'base_url' => $this->_request_base_url
     );
 
     $this->_guzzle = new GuzzleHttp\Client($params);
@@ -167,6 +182,10 @@ abstract class BaseEndpoint extends PHPUnit_Extensions_Database_TestCase {
   }
 
   public function truncate($table){
+    if (!$this->_conn) {
+      return;
+    }
+
     $query = 'SET FOREIGN_KEY_CHECKS=0; truncate `' . $table . '`; SET FOREIGN_KEY_CHECKS=1;';
     $this->_conn->getConnection()->exec($query);
   }
