@@ -1,4 +1,8 @@
 <?php
+namespace AEFramework\routes;
+
+use Exception;
+use UnexpectedValueException;
 
 class BaseRoute {
 

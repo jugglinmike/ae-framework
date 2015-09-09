@@ -1,8 +1,8 @@
 <?php
-require_once(__DIR__ . '/../../../src/models/BaseModel.php');
-require_once(__DIR__ . '/../../AEFrameworkTestCase.php');
+namespace AEFramework\test;
+use Exception;
 
-class Model extends BaseModel {
+class Model extends \AEFramework\models\BaseModel {
   protected $_json_type = 'test json type';
   protected $_db_table = 'model_test_table';
   protected $_db_schema = array(
@@ -12,7 +12,7 @@ class Model extends BaseModel {
     'test_attr3' => array(
       'type' => 'string',
       'default' => 'via value',
-      'defaultFunction' => 'Model::attr3DefaultFunction'
+      'defaultFunction' => '\AEFramework\test\Model::attr3DefaultFunction'
     ),
     'test_attr4' => array(
       'type' => 'bool',

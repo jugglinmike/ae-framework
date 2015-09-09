@@ -1,5 +1,10 @@
 <?php
-abstract class BaseEndpoint extends PHPUnit_Extensions_Database_TestCase {
+namespace AEFramework\tests;
+
+use PDO;
+use Exception;
+
+abstract class BaseEndpoint extends \PHPUnit_Extensions_Database_TestCase {
   protected $_request_base_url = null;
   protected $_db_credentials = null;
 
@@ -45,7 +50,7 @@ abstract class BaseEndpoint extends PHPUnit_Extensions_Database_TestCase {
       'base_url' => $this->_request_base_url
     );
 
-    $this->_guzzle = new GuzzleHttp\Client($params);
+    $this->_guzzle = new \GuzzleHttp\Client($params);
     parent::setUp();
   }
 

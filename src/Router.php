@@ -1,4 +1,7 @@
 <?php
+namespace AEFramework;
+
+use \AEFramework\JsonResHandler;
 
 class Router Implements RouterInterface {
 
@@ -78,7 +81,7 @@ class Router Implements RouterInterface {
     }
   }
 
-  public function add_route(BaseRoute $route) {
+  public function add_route(routes\BaseRoute $route) {
     // validate the method
     $method = $route->get_method();
     if (!in_array($method, self::$_whitelisted_http_methods)) {

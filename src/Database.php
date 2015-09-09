@@ -1,4 +1,6 @@
 <?php
+namespace AEFramework;
+use \mysqli;
 
 class Database implements DatabaseInterface {
 

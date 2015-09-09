@@ -1,4 +1,8 @@
 <?php
+namespace AEFramework\routes;
+
+use \AEFramework\JsonResHandler;
+use Exception;
 
 class BaseJsonPutRoute extends BaseJsonRoute {
 

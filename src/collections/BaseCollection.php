@@ -1,4 +1,9 @@
 <?php
+namespace AEFramework\collections;
+
+use \AEFramework\Database;
+use \AEFramework\models\BaseModel;
+use \AEFramework\Helpers;
 
 class BaseCollection {
 
@@ -116,7 +121,7 @@ class BaseCollection {
     }
 
     // first, pluck the id's from results
-    $ids = array_pluck($primary_key, $results);
+    $ids = Helpers::array_pluck($primary_key, $results);
 
     // finally, instantiate new models for each result that was fetched
     $class_name = $this->get_model_class();

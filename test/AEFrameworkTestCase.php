@@ -1,10 +1,15 @@
 <?php
+namespace AEFramework\test;
+use PDO;
+use Exception;
+
 define('DB_HOST', '127.0.0.1');
 define('DB_USERNAME', 'api');
 define('DB_PASSWORD', 'bocoup');
 define('TEST_DB_DATABASE', 'api');
 define('DB_DATABASE', 'api');
 define('TESTMODE', true);
+
 /**
  * Concrete subclasses must define the following attributes:
  *
@@ -12,7 +17,7 @@ define('TESTMODE', true);
  * - _table_name
  * - _fixture
  */
-abstract class AEFrameworkTestCase extends PHPUnit_Extensions_Database_TestCase
+abstract class AEFrameworkTestCase extends \PHPUnit_Extensions_Database_TestCase
 {
   static private $pdo = null;
   private $conn = null;

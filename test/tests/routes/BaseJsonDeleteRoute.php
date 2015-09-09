@@ -1,13 +1,11 @@
 <?php
-require_once(__DIR__ . '/../../../src/router.php');
-require_once(__DIR__ . '/../../AEFrameworkTestCase.php');
-require_once(__DIR__ . '/../../TestModel.php');
+namespace AEFramework\test;
 
-class JsonDeleteRoute extends BaseJsonDeleteRoute {
-  public function __construct($router)
+class JsonDeleteRoute extends \AEFramework\routes\BaseJsonDeleteRoute {
+  public function __construct()
   {
     $this->_model_object = new TestModel();
-    Parent::__construct($router);
+    Parent::__construct();
   }
 }
 
@@ -31,8 +29,7 @@ SQL;
 
   protected function setUp()
   {
-    $this->router = new Router();
-    $this->r = new JsonDeleteRoute($this->router);
+    $this->r = new JsonDeleteRoute();
     parent::setUp();
   }
 

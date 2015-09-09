@@ -16,7 +16,7 @@
   tags: composer
 
 - name: install composer dependencies
-  composer: command=install working_dir={{root}}
+  composer: command=install working_dir={{root}} no_dev=no
   tags: composer
 
 - name: Alias binaries

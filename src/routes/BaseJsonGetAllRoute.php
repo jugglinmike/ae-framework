@@ -1,4 +1,9 @@
 <?php
+namespace AEFramework\routes;
+
+use \AEFramework\JsonResHandler;
+use \AEFramework\collections\BaseCollection;
+use Exception;
 
 class BaseJsonGetAllRoute extends BaseJsonRoute {
 

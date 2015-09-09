@@ -1,4 +1,5 @@
 <?php
+namespace AEFramework;
 
 Interface DatabaseInterface {
 

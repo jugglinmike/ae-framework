@@ -1,11 +1,12 @@
 <?php
-require_once(__DIR__ . '/../../../src/routes/BaseRoute.php');
+namespace AEFramework\test;
+use Exception;
 
-class BaseRouteTest extends PHPUnit_Framework_TestCase
+class BaseRouteTest extends \PHPUnit_Framework_TestCase
 {
   protected function setUp()
   {
-    $this->r = new BaseRoute();
+    $this->r = new \AEFramework\routes\BaseRoute();
     parent::setUp();
   }
 

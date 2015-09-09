@@ -1,6 +1,10 @@
 <?php
+namespace AEFramework\tests;
 
-abstract class BaseServiceTest extends PHPUnit_Extensions_Database_TestCase {
+use PDO;
+use Exception;
+
+abstract class BaseServiceTest extends \PHPUnit_Extensions_Database_TestCase {
 
   static private $_pdo = null;
   protected $_conn = null;

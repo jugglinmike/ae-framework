@@ -1,8 +1,7 @@
 <?php
+namespace AEFramework\test;
 
-require_once(__DIR__ . '/../src/models/BaseModel.php');
-
-class TestModel extends BaseModel {
+class TestModel extends \AEFramework\models\BaseModel {
   protected $_json_type = 'test json type';
   protected $_db_table = 'test_table';
   protected $_db_schema = array(

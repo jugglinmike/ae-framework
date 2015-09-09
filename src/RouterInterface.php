@@ -1,8 +1,9 @@
 <?php
+namespace AEFramework;
 
 Interface RouterInterface {
 
-  public function add_route(BaseRoute $route);
+  public function add_route(routes\BaseRoute $route);
 
   public static function get_current_url();
 

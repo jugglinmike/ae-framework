@@ -1,14 +1,11 @@
 <?php
-require_once(__DIR__ . '/../../../src/router.php');
-require_once(__DIR__ . '/../../../src/routes/BaseJsonPostRoute.php');
-require_once(__DIR__ . '/../../AEFrameworkTestCase.php');
-require_once(__DIR__ . '/../../TestModel.php');
+namespace AEFramework\test;
 
-class JsonPutRoute extends BaseJsonPutRoute {
-  public function __construct($router)
+class JsonPutRoute extends \AEFramework\routes\BaseJsonPutRoute {
+  public function __construct()
   {
     $this->_model_object = new TestModel();
-    Parent::__construct($router);
+    Parent::__construct();
   }
 }
 
@@ -33,8 +30,7 @@ SQL;
 
   protected function setUp()
   {
-    $this->router = new Router();
-    $this->r = new JsonPutRoute($this->router);
+    $this->r = new JsonPutRoute();
     parent::setUp();
   }
 

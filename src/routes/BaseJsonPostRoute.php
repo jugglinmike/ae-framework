@@ -1,4 +1,7 @@
 <?php
+namespace AEFramework\routes;
+
+use \AEFramework\JsonResHandler;
 
 class BaseJsonPostRoute extends BaseJsonRoute {
 
