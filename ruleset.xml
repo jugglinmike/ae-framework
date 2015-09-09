@@ -8,7 +8,7 @@
   <description>A coding standard set for the Audience Engine Framework.</description>
 
   <!-- Set areas to check -->
-  <file>./utils</file>
+  <file>./src</file>
   <file>./test</file>
 
   <!-- Set CLI args -->

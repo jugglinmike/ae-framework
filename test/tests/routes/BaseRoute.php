@@ -1,5 +1,5 @@
 <?php
-require_once(__DIR__ . '/../../../utils/routes/BaseRoute.php');
+require_once(__DIR__ . '/../../../src/routes/BaseRoute.php');
 
 class BaseRouteTest extends PHPUnit_Framework_TestCase
 {

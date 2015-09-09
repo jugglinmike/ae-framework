@@ -1,6 +1,6 @@
 <?php
 
-require_once(__DIR__ . '/../utils/models/BaseModel.php');
+require_once(__DIR__ . '/../src/models/BaseModel.php');
 
 class TestModel extends BaseModel {
   protected $_json_type = 'test json type';

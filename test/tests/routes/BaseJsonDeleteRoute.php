@@ -1,5 +1,5 @@
 <?php
-require_once(__DIR__ . '/../../../utils/router.php');
+require_once(__DIR__ . '/../../../src/router.php');
 require_once(__DIR__ . '/../../AEFrameworkTestCase.php');
 require_once(__DIR__ . '/../../TestModel.php');
 

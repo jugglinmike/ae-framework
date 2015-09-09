@@ -1,6 +1,6 @@
 <?php
 // load the configuration first
-require_once(__DIR__.'/utils/helpers.php');
+require_once(__DIR__.'/src/helpers.php');
 
 class FrameworkAutoloader {
 
@@ -13,7 +13,7 @@ class FrameworkAutoloader {
     // lowercase all the things
     $lower_class = strtolower($class); //lololol
     $class_filename = $lower_class.'.php';
-    $folder_root = __DIR__.'/utils';
+    $folder_root = __DIR__.'/src';
 
     //check if it's in the cache and the file still exists
     if (array_key_exists($lower_class, $this->_path_cache) && file_exists($this->_path_cache[$lower_class])) {

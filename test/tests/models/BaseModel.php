@@ -1,5 +1,5 @@
 <?php
-require_once(__DIR__ . '/../../../utils/models/BaseModel.php');
+require_once(__DIR__ . '/../../../src/models/BaseModel.php');
 require_once(__DIR__ . '/../../AEFrameworkTestCase.php');
 
 class Model extends BaseModel {
